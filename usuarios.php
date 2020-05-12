@@ -58,6 +58,17 @@ class usuarios extends Crud{
 		$stmt->bindParam(':id', $id);
 		return $stmt->execute();	
 	}
+
+	public function login(){
+		$sql = "SELECT * FROM $this->table WHERE email = :email
+						and senha = :senha";
+		$stmt = DB::prepare($sql);
+		$stmt->bindParam(':email', $this->email);
+		$stmt->bindParam(':senha', $this->senha);
+		$stmt->execute();
+		$count = $stmt->rowCount();
+		return $count;
+	}
 }
 
 ?>
