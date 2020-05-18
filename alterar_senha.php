@@ -1,7 +1,13 @@
-<!DOCTYPE html>
-<?php
+<?php include "usuarios.php";
   session_start();
-  if(!$_SESSION['usuario']){
+  $myuser = new usuarios();
+  $user = $_SESSION['usuario'];
+  if(isset($_POST['f_senha']) and strlen($_POST['f_senha']) > 5){
+    $user_find = $myuser->find($user);
+    $myuser->setNome($user_find[0]->nome);
+    $myuser->setEmail($user_find[0]->email);
+    $myuser->setSenha(md5($_POST['f_senha']));
+    $myuser->update($user);
     Header("Location:index.php");
   }
 ?>
@@ -20,18 +26,5 @@
       <button type="submit" name="button">Enviar</button>
     </form>
     </b>
-
-    <?php include "usuarios.php";
-      $myuser = new usuarios();
-      $user = $_SESSION['usuario'];
-      if(isset($_POST['f_senha']) and strlen($_POST['f_senha']) > 5){
-        $user_find = $myuser->find($user);
-        $myuser->setNome($user_find[0]->nome);
-        $myuser->setEmail($user_find[0]->email);
-        $myuser->setSenha(md5($_POST['f_senha']));
-        $myuser->update($user);
-        Header("Location:index.php");
-      }
-    ?>
   </body>
 </html>
