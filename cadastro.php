@@ -25,7 +25,7 @@
 			echo "<br/>";
 			echo "<H2>Email: <input type='text' name='f_mail' value=".$myuser->getEmail()."></H2>";
 			echo "<br/>";
-			if(strlen($myuser->getSenha() > 5)){
+			if(strlen($myuser->getSenha() > 1)){
 				echo "<input type='password' hidden=true name='f_senha' value=".$myuser->getSenha().">";
 			} else {
 				echo "<h2>Senha:<input type='password' name='f_senha' value=".$myuser->getSenha()."></h2>";
