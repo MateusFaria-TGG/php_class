@@ -1,11 +1,18 @@
 <?php include "usuarios.php";
+  session_start();
   $myuser = new usuarios();
   if(isset($_POST['f_email']) and isset($_POST['f_senha'])){
     $myuser->setEmail($_POST['f_email']);
-    $myuser->setSenha($_POST['f_senha']);
+    $myuser->setSenha(md5($_POST['f_senha']));
     $resultado = $myuser->login();
     if($resultado > 0){
-      Header("Location:cadastro.php");
+      if($_POST['f_senha'] == '123456'){
+        $_SESSION['usuario'] = $myuser->getId();
+        Header("Location:alterar_senha.php");
+      }
+      else {
+        Header("Location:cadastro.php");
+      }
     } else {
       exibe_pagina('Login ou senha incorreto.');
     }

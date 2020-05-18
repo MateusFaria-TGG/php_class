@@ -25,8 +25,12 @@
 			echo "<br/>";
 			echo "<H2>Email: <input type='text' name='f_mail' value=".$myuser->getEmail()."></H2>";
 			echo "<br/>";
-			echo "<H2>Senha: <input type='password' name='f_senha' value=".$myuser->getSenha()."></H2>";
-			echo "<br/>";
+			if(strlen($myuser->getSenha() > 5)){
+				echo "<input type='password' hidden=true name='f_senha' value=".$myuser->getSenha().">";
+			} else {
+				echo "<h2>Senha:<input type='password' name='f_senha' value=".$myuser->getSenha()."></h2>";
+			}
+
 			if(isset($id)){
 				echo "<input type='number' hidden=true name='f_id' value=".$id.">";
 			}
@@ -46,12 +50,17 @@
 				$myuser->setSenha($_POST['f_senha']);
 				$myuser->insert();
 			}
-			else if(isset($_POST['f_id'])){
+
+			else if(isset($_POST['f_id']) and $_POST['f_action'] == 'excluir'){
 				$myuser->delete($_POST['f_id']);
 			}
-			
+
+			else if (isset($_POST['f_id']) and $_POST['f_action'] == 'resetar_senha') {
+				$myuser->resetPassword($_POST['f_id']);
+				echo "Senha resetada";
+			}
 		?>
-		
+
 		<div>
 			<table border=1>
 				<tr>
@@ -71,9 +80,16 @@
 							</form>
 						</td>
 						<td>
-							<?php 
+							<?php
 								echo "<a href='?id=".$value->id."'>Alterar</a>";
 							?>
+						</td>
+						<td>
+							<form	action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
+								<input type='text' hidden=true name="f_id" value=<?php echo "$value->id"; ?>>
+								<input type='text' hidden=true name="f_action" value="resetar_senha">
+								<button>Resetar Senha</button>
+							</form>
 						</td>
 					</tr>
 				<?php endforeach ?>
