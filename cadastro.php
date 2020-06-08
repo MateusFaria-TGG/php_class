@@ -1,5 +1,6 @@
 <?php
 	include "usuarios.php";
+	include "perfis.php";
 ?>
 <html>
 	<head>
@@ -11,6 +12,8 @@
 		<h1>Todos os campos são obrigatórios!</h1>
 		<?php
 			$myuser = new usuarios();
+			$perfis = new perfis();
+			$perfis_usuario = $perfis->findAll();
 			$id;
 			if(isset($_GET["id"])){
 				$user_find = $myuser->find($_GET["id"]);
@@ -25,12 +28,17 @@
 			echo "<br/>";
 			echo "<H2>Email: <input type='text' name='f_mail' value=".$myuser->getEmail()."></H2>";
 			echo "<br/>";
-			if(strlen($myuser->getSenha() > 1)){
+			if(strlen($myuser->getSenha()) > 1){
 				echo "<input type='password' hidden=true name='f_senha' value=".$myuser->getSenha().">";
 			} else {
 				echo "<h2>Senha:<input type='password' name='f_senha' value=".$myuser->getSenha()."></h2>";
 			}
-
+			echo "<select name='f_perfil'>";
+			foreach ($perfis_usuario as $key => $value) {
+				echo "<option value=".$value->id.">". $value->nome ."</option>";
+			}
+			echo "</select>";
+			echo "<br><br>";
 			if(isset($id)){
 				echo "<input type='number' hidden=true name='f_id' value=".$id.">";
 			}
@@ -41,6 +49,7 @@
 				$myuser->setNome($_POST['f_nome']);
 				$myuser->setEmail($_POST['f_mail']);
 				$myuser->setSenha($_POST['f_senha']);
+				$myuser->setId_perfis(intval($_POST['f_perfil']));
 				$myuser->update($_POST['f_id']);
 			}
 
@@ -48,6 +57,7 @@
 				$myuser->setNome($_POST['f_nome']);
 				$myuser->setEmail($_POST['f_mail']);
 				$myuser->setSenha($_POST['f_senha']);
+				$myuser->setId_perfis(intval($_POST['f_perfil']));
 				$myuser->insert();
 			}
 
@@ -66,12 +76,14 @@
 				<tr>
 					<th width="20%">Nome</th>
 					<th width="30%">E-mail</th>
+					<th width="30%">Perfil do usuário</th>
 				</tr>
 
 				<?php foreach ($myuser->findAll() as $key => $value) :?>
 					<tr>
 						<td><?php echo "$value->nome"; ?></td>
 						<td><?php echo "$value->email"; ?></td>
+						<td><?php echo "$value->id_perfis"; ?></td>
 						<td>
 							<form method="POST" action="<?php echo $_SERVER['PHP_SELF']; ?>">
 								<input type='text' hidden=true name="f_id" value=<?php echo "$value->id"; ?>>

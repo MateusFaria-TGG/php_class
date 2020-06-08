@@ -7,6 +7,7 @@ class usuarios extends Crud{
 	private $nome;
 	private $email;
 	private $senha;
+	private $id_perfis;
 
 	public function getId(){
 		return $this->id;
@@ -22,6 +23,10 @@ class usuarios extends Crud{
 
 	public function getSenha(){
 		return $this->senha;
+	}
+
+	public function getId_perfis(){
+		return $this->id_perfis;
 	}
 
 	public function setId($id){
@@ -40,22 +45,28 @@ class usuarios extends Crud{
 		$this->senha = $senha;
 	}
 
+	public function setId_perfis($id_perfis){
+		$this->id_perfis = $id_perfis;
+	}
+
 	public function insert(){
-		$sql  = "INSERT INTO $this->table (nome, email, senha) VALUES (:nome, :email, :senha)";
+		$sql  = "INSERT INTO $this->table (nome, email, senha, id_perfis) VALUES (:nome, :email, :senha, :id_perfis)";
 		$stmt = DB::prepare($sql);
 		$stmt->bindParam(':nome', $this->nome);
 		$stmt->bindParam(':email', $this->email);
 		$this->senha = md5($this->senha);
 		$stmt->bindParam(':senha', $this->senha);
+		$stmt->bindParam(':id_perfis', $this->id_perfis);
 		return $stmt->execute();
 	}
 
 	public function update($id){
-		$sql  = "UPDATE $this->table SET nome = :nome, email = :email, senha = :senha WHERE id = :id";
+		$sql  = "UPDATE $this->table SET nome = :nome, email = :email, senha = :senha, id_perfis = :id_perfis WHERE id = :id";
 		$stmt = DB::prepare($sql);
 		$stmt->bindParam(':nome', $this->nome);
 		$stmt->bindParam(':email', $this->email);
 		$stmt->bindParam(':senha', $this->senha);
+		$stmt->bindParam(':id_perfis', $this->id_perfis);
 		$stmt->bindParam(':id', $id);
 		return $stmt->execute();
 	}
@@ -70,7 +81,7 @@ class usuarios extends Crud{
 		$count = $stmt->rowCount();
 		if($count > 0){
 			$user_id = $stmt->fetchAll();
-			$this->id = $user_id[0]->id;			
+			$this->id = $user_id[0]->id;
 		}
 		return $count;
 	}
