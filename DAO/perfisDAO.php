@@ -1,28 +1,12 @@
 <?php
-  require_once 'Crud.php';
-
-  class perfis extends Crud{
+  class perfisDAO extends Crud {
+    private $d_perfil;
     protected $table = 'perfis';
-    private $id;
-    private $nome;
+    public function __construct() {}
+    public function __clone(){}
+    public function __destruct(){}
 
-    public function getId(){
-      return $this->id;
-    }
-
-    public function getNome(){
-      return $this->nome;
-    }
-
-    public function setId($id){
-      $this->id = $id;
-    }
-
-    public function setNome($nome){
-      $this->nome = $nome;
-    }
-
-  	public function insert(){
+    public function insert(){
   		$sql  = "INSERT INTO $this->table (nome, email, senha, id_perfis) VALUES (:nome, :email, :senha, :id_perfis)";
   		$stmt = DB::prepare($sql);
   		$stmt->bindParam(':nome', $this->nome);
@@ -42,6 +26,15 @@
   		return $stmt->execute();
   	}
 
+    public function load(){
+      $arr = $this->findAll();
+      foreach($arr as $chave => $valor){
+        $objeto = new perfis();
+        $objeto->setId($valor->id);
+        $objeto->setNome($valor->nome);
+        $arrPerfis[] = $objeto;
+      }
+      return $arrPerfis;
+    }
   }
-
 ?>

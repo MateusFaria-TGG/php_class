@@ -1,16 +1,25 @@
-<?php include "usuarios.php";
+<?php
+  require_once($_SERVER['DOCUMENT_ROOT'] . 'Aula06/classes/usuarios.php');
+  require_once($_SERVER['DOCUMENT_ROOT'] . 'Aula06/DAO/usuariosDAO.php');
   session_start();
+
   $myuser = new usuarios();
+  $myuserdao = new usuariosDAO($myuser);
   $user = $_SESSION['usuario'];
+
   if(isset($_POST['f_senha']) and strlen($_POST['f_senha']) > 5){
-    $user_find = $myuser->find($user);
+    $user_find = $myuserdao->find($user);
+
     $myuser->setNome($user_find[0]->nome);
     $myuser->setEmail($user_find[0]->email);
     $myuser->setSenha(md5($_POST['f_senha']));
-    $myuser->update($user);
+    $myuser->setId_perfis($user_find[0]->id_perfis);
+    $myuserdao->update($user);
+
     Header("Location:index.php");
   }
 ?>
+
 <html lang="pt-br">
   <head>
     <meta charset="utf-8">
